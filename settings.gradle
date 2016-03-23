@@ -1,0 +1,2 @@
+rootProject.name = 'Scal0r'
+include ':app'

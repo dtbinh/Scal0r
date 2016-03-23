@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<BorderPane
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/8"
+        fx:controller="de.michiruf.scalor.ui.MainWindowController"
+        styleClass="root">
+    <stylesheets>
+        <URL value="@Styles.css"/>
+    </stylesheets>
+
+    <center>
+        <VBox>
+            <padding>
+                <Insets bottom="25" left="25" right="25" top="25"/>
+            </padding>
+
+            <GridPane id="scan" hgap="10" vgap="10">
+                <Label
+                        text="Scan X" labelFor="$scanX"
+                        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField
+                        fx:id="scanX"
+                        GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label
+                        text="Scan Y" labelFor="$scanY"
+                        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField
+                        fx:id="scanY"
+                        GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label
+                        text="Scan Width" labelFor="$scanWidth"
+                        GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField
+                        fx:id="scanWidth"
+                        GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label
+                        text="Scan Height" labelFor="$scanHeight"
+                        GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField
+                        fx:id="scanHeight"
+                        GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            </GridPane>
+
+            <Pane prefHeight="15"/>
+
+            <GridPane id="output" hgap="10" vgap="10">
+                <Label
+                        text="Output X" labelFor="$outputX"
+                        GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField
+                        fx:id="outputX"
+                        GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+                <Label
+                        text="Output Y" labelFor="$outputY"
+                        GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField
+                        fx:id="outputY"
+                        GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+                <Label
+                        text="Output Width" labelFor="$outputWidth"
+                        GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField
+                        fx:id="outputWidth"
+                        GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label
+                        text="Output Height" labelFor="$outputHeight"
+                        GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField
+                        fx:id="outputHeight"
+                        GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            </GridPane>
+
+            <Pane prefHeight="25"/>
+
+            <VBox alignment="CENTER">
+                <Button text="Start" onAction="#onStartClick"/>
+            </VBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox id="footer" alignment="CENTER">
+            <Hyperlink text="Github @michiruf" onAction="#onGithubClick" underline="true"/>
+        </HBox>
+    </bottom>
+</BorderPane>
