@@ -29,7 +29,7 @@ public class DisplayFrame extends JFrame implements Observer {
         configuration.addObserver(this);
         imageLabel = new JLabel();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // TODO stop capturing on close
         setUndecorated(true);
         setAlwaysOnTop(true);
         setBackground(new Color(0, 0, 0, 0));

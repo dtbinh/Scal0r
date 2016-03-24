@@ -1,10 +1,16 @@
 package de.michiruf.scalor.capture;
 
+import de.michiruf.scalor.helper.FrameCounter;
+
 import javax.inject.Inject;
 import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michael Ruf
@@ -14,18 +20,15 @@ public class Capture {
 
     private final Monitor monitor;
     private final DisplayFrame displayFrame;
-    private final Thread captureThread;
-    private boolean shellRun = false;
+    private final ScheduledExecutorService executor;
+    private ScheduledFuture<?> executorFuture;
+    private FrameCounter frameCounter;
 
     @Inject
     public Capture(Monitor monitor, DisplayFrame displayFrame) {
         this.monitor = monitor;
         this.displayFrame = displayFrame;
-        captureThread = new Thread(() -> {
-            while (shellRun) {
-                capture();
-            }
-        });
+        this.executor = Executors.newScheduledThreadPool(9);
     }
 
     public void start() {
@@ -39,21 +42,26 @@ public class Capture {
             }
         });
 
-        shellRun = true;
-        captureThread.start();
+        frameCounter = FrameCounter.createAndStart();
+        executorFuture = executor.scheduleAtFixedRate(this::capture, 0, 15, TimeUnit.MILLISECONDS);
     }
 
     public void stop() {
         displayFrame.setVisible(false);
-        shellRun = false;
+        if (executorFuture != null) {
+            executorFuture.cancel(true);
+        }
+
+        System.out.println("Capture frames average: " + frameCounter.getFrames());
     }
 
     public boolean isRunning() {
-        return shellRun;
+        return displayFrame.isVisible();
     }
 
     private void capture() {
-        displayFrame.draw((monitor.captureScreen()));
+        frameCounter.tick();
+        displayFrame.draw(resizeImage(monitor.captureScreen()));
     }
 
     // TODO make scaling configurable

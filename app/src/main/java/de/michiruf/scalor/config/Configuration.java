@@ -28,6 +28,8 @@ public class Configuration extends Observable {
     @JsonProperty
     private int outputY;
 
+    // We would need scaling factors more then the width, because it can get computed by scale and scan size
+
     @JsonProperty
     private int outputWidth;
 
