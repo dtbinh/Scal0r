@@ -2,11 +2,13 @@ package de.michiruf.scalor.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Observable;
+
 /**
  * @author Michael Ruf
  * @since 2016-03-08
  */
-public class Configuration {
+public class Configuration extends Observable {
 
     @JsonProperty
     private int scanX;
@@ -21,9 +23,6 @@ public class Configuration {
     private int scanHeight;
 
     @JsonProperty
-    private int scanScreen = 1;
-
-    @JsonProperty
     private int outputX;
 
     @JsonProperty
@@ -35,15 +34,14 @@ public class Configuration {
     @JsonProperty
     private int outputHeight;
 
-    @JsonProperty
-    private int outputScreen = 1;
-
     public int getScanX() {
         return scanX;
     }
 
     public void setScanX(int scanX) {
         this.scanX = scanX;
+        setChanged();
+        notifyObservers();
     }
 
     public int getScanY() {
@@ -52,6 +50,8 @@ public class Configuration {
 
     public void setScanY(int scanY) {
         this.scanY = scanY;
+        setChanged();
+        notifyObservers();
     }
 
     public int getScanWidth() {
@@ -60,6 +60,8 @@ public class Configuration {
 
     public void setScanWidth(int scanWidth) {
         this.scanWidth = scanWidth;
+        setChanged();
+        notifyObservers();
     }
 
     public int getScanHeight() {
@@ -68,14 +70,8 @@ public class Configuration {
 
     public void setScanHeight(int scanHeight) {
         this.scanHeight = scanHeight;
-    }
-
-    public int getScanScreen() {
-        return scanScreen;
-    }
-
-    public void setScanScreen(int scanScreen) {
-        this.scanScreen = scanScreen;
+        setChanged();
+        notifyObservers();
     }
 
     public int getOutputX() {
@@ -84,6 +80,8 @@ public class Configuration {
 
     public void setOutputX(int outputX) {
         this.outputX = outputX;
+        setChanged();
+        notifyObservers();
     }
 
     public int getOutputY() {
@@ -92,6 +90,8 @@ public class Configuration {
 
     public void setOutputY(int outputY) {
         this.outputY = outputY;
+        setChanged();
+        notifyObservers();
     }
 
     public int getOutputWidth() {
@@ -100,6 +100,8 @@ public class Configuration {
 
     public void setOutputWidth(int outputWidth) {
         this.outputWidth = outputWidth;
+        setChanged();
+        notifyObservers();
     }
 
     public int getOutputHeight() {
@@ -108,13 +110,7 @@ public class Configuration {
 
     public void setOutputHeight(int outputHeight) {
         this.outputHeight = outputHeight;
-    }
-
-    public int getOutputScreen() {
-        return outputScreen;
-    }
-
-    public void setOutputScreen(int outputScreen) {
-        this.outputScreen = outputScreen;
+        setChanged();
+        notifyObservers();
     }
 }

@@ -65,7 +65,6 @@ public class MainWindowController {
         field.setText(Integer.toString(value));
         field.setOnKeyReleased(event -> {
             save();
-            displayFrame.rearrange();
         });
     }
 

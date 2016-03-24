@@ -5,9 +5,6 @@ import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michael Ruf
@@ -17,14 +14,18 @@ public class Capture {
 
     private final Monitor monitor;
     private final DisplayFrame displayFrame;
-    private final ThreadPoolExecutor captureThread;
+    private final Thread captureThread;
     private boolean shellRun = false;
 
     @Inject
     public Capture(Monitor monitor, DisplayFrame displayFrame) {
         this.monitor = monitor;
         this.displayFrame = displayFrame;
-        captureThread = new ThreadPoolExecutor(4, 10, 1, TimeUnit.DAYS, new LinkedBlockingDeque<>());
+        captureThread = new Thread(() -> {
+            while (shellRun) {
+                capture();
+            }
+        });
     }
 
     public void start() {
@@ -39,15 +40,7 @@ public class Capture {
         });
 
         shellRun = true;
-        captureThread.execute(new Runnable() {
-            @Override
-            public void run() {
-                displayFrame.draw(resizeImage(monitor.captureScreen()));
-                if (shellRun) {
-                    captureThread.execute(this);
-                }
-            }
-        });
+        captureThread.start();
     }
 
     public void stop() {
@@ -59,9 +52,13 @@ public class Capture {
         return shellRun;
     }
 
+    private void capture() {
+        displayFrame.draw((monitor.captureScreen()));
+    }
+
     // TODO make scaling configurable
     private Image resizeImage(BufferedImage bufferedImage) {
         return bufferedImage.getScaledInstance(bufferedImage.getWidth(), bufferedImage.getHeight() * 2,
-                Image.SCALE_DEFAULT);
+                Image.SCALE_FAST);
     }
 }
