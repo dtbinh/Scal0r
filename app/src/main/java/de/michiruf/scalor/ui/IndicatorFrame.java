@@ -1,6 +1,7 @@
 package de.michiruf.scalor.ui;
 
 import de.michiruf.scalor.config.Configuration;
+import de.michiruf.scalor.helper.ScreenHelper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,6 +33,7 @@ public class IndicatorFrame extends JFrame {
     }
 
     public void rearrange() {
+        ScreenHelper.showOnScreen(configuration.getScanScreen() - 1, this);
         setBounds(configuration.getScanX(), configuration.getScanY(),
                 configuration.getScanWidth(), configuration.getScanHeight());
         // TODO display red frame for output and green for scan

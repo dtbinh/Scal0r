@@ -28,6 +28,7 @@ public class Capture {
     }
 
     public void start() {
+        displayFrame.setVisible(true);
         displayFrame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -50,8 +51,13 @@ public class Capture {
         });
     }
 
-    private void stop() {
+    public void stop() {
+        displayFrame.setVisible(false);
         shellRun = false;
+    }
+
+    public boolean isRunning() {
+        return shellRun;
     }
 
     // TODO make scaling configurable

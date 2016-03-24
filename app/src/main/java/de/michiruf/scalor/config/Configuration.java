@@ -21,6 +21,9 @@ public class Configuration {
     private int scanHeight;
 
     @JsonProperty
+    private int scanScreen = 1;
+
+    @JsonProperty
     private int outputX;
 
     @JsonProperty
@@ -31,6 +34,9 @@ public class Configuration {
 
     @JsonProperty
     private int outputHeight;
+
+    @JsonProperty
+    private int outputScreen = 1;
 
     public int getScanX() {
         return scanX;
@@ -64,6 +70,14 @@ public class Configuration {
         this.scanHeight = scanHeight;
     }
 
+    public int getScanScreen() {
+        return scanScreen;
+    }
+
+    public void setScanScreen(int scanScreen) {
+        this.scanScreen = scanScreen;
+    }
+
     public int getOutputX() {
         return outputX;
     }
@@ -94,5 +108,13 @@ public class Configuration {
 
     public void setOutputHeight(int outputHeight) {
         this.outputHeight = outputHeight;
+    }
+
+    public int getOutputScreen() {
+        return outputScreen;
+    }
+
+    public void setOutputScreen(int outputScreen) {
+        this.outputScreen = outputScreen;
     }
 }

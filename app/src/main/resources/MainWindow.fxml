@@ -53,6 +53,13 @@
                 <TextField
                         fx:id="scanHeight"
                         GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label
+                        text="Scan Screen" labelFor="$scanScreen"
+                        GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField
+                        fx:id="scanScreen" disable="true"
+                        GridPane.columnIndex="1" GridPane.rowIndex="4"/>
             </GridPane>
 
             <Pane prefHeight="15"/>
@@ -85,12 +92,19 @@
                 <TextField
                         fx:id="outputHeight"
                         GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label
+                        text="Output Screen" labelFor="$outputScreen"
+                        GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField
+                        fx:id="outputScreen"
+                        GridPane.columnIndex="1" GridPane.rowIndex="4"/>
             </GridPane>
 
             <Pane prefHeight="25"/>
 
             <VBox alignment="CENTER">
-                <Button text="Start" onAction="#onStartClick"/>
+                <Button text="Start" onAction="#onStartStopClick" fx:id="startStopButton"/>
             </VBox>
         </VBox>
     </center>

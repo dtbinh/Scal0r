@@ -1,8 +1,10 @@
 package de.michiruf.scalor.ui;
 
 import de.michiruf.scalor.capture.Capture;
+import de.michiruf.scalor.capture.DisplayFrame;
 import de.michiruf.scalor.config.Configuration;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
 import javax.inject.Inject;
@@ -23,48 +25,56 @@ public class MainWindowController {
     protected static IndicatorFrame indicatorFrame;
     @Inject
     protected static Capture capture;
+    @Inject
+    protected static DisplayFrame displayFrame;
 
     @FXML
-    public TextField scanX;
+    private TextField scanX;
     @FXML
-    public TextField scanY;
+    private TextField scanY;
     @FXML
-    public TextField scanWidth;
+    private TextField scanWidth;
     @FXML
-    public TextField scanHeight;
+    private TextField scanHeight;
+    @FXML
+    private TextField scanScreen;
 
     @FXML
-    public TextField outputX;
+    private TextField outputX;
     @FXML
-    public TextField outputY;
+    private TextField outputY;
     @FXML
-    public TextField outputWidth;
+    private TextField outputWidth;
     @FXML
-    public TextField outputHeight;
+    private TextField outputHeight;
+    @FXML
+    private TextField outputScreen;
+
+    @FXML
+    private Button startStopButton;
 
     @SuppressWarnings("unused") // due to FXML
     @FXML
     protected void initialize() {
-        if (configuration == null) return;
-
         initializeTextField(scanX, configuration.getScanX());
         initializeTextField(scanY, configuration.getScanY());
         initializeTextField(scanWidth, configuration.getScanWidth());
         initializeTextField(scanHeight, configuration.getScanHeight());
+        initializeTextField(scanScreen, configuration.getScanScreen());
 
         initializeTextField(outputX, configuration.getOutputX());
         initializeTextField(outputY, configuration.getOutputY());
         initializeTextField(outputWidth, configuration.getOutputWidth());
         initializeTextField(outputHeight, configuration.getOutputHeight());
+        initializeTextField(outputScreen, configuration.getOutputScreen());
     }
 
     private void initializeTextField(TextField field, int value) {
-        if (value != 0) {
-            field.setText(Integer.toString(value));
-        }
+        field.setText(Integer.toString(value));
         field.setOnKeyReleased(event -> {
             save();
             indicatorFrame.rearrange();
+            displayFrame.rearrange();
         });
         field.setOnMousePressed(event -> indicatorFrame.setVisible(true));
         field.setOnMouseExited(event -> indicatorFrame.setVisible(false));
@@ -75,27 +85,32 @@ public class MainWindowController {
         saveTextField(scanY, configuration::setScanY);
         saveTextField(scanWidth, configuration::setScanWidth);
         saveTextField(scanHeight, configuration::setScanHeight);
+        saveTextField(scanScreen, configuration::setScanScreen);
 
         saveTextField(outputX, configuration::setOutputX);
         saveTextField(outputY, configuration::setOutputY);
         saveTextField(outputWidth, configuration::setOutputWidth);
         saveTextField(outputHeight, configuration::setOutputHeight);
+        saveTextField(outputScreen, configuration::setOutputScreen);
     }
 
     private void saveTextField(TextField field, SaveAction saveAction) {
         try {
-            int port = Integer.parseInt(field.getText());
-            if (port != 0) {
-                saveAction.call(port);
-            }
+            saveAction.call(Integer.parseInt(field.getText()));
         } catch (NumberFormatException e) {
             // Do nothing
         }
     }
 
     @FXML
-    public void onStartClick() {
-        capture.start();
+    public void onStartStopClick() {
+        if(!capture.isRunning()) {
+            capture.start();
+            startStopButton.setText("Stop");
+        } else {
+            capture.stop();
+            startStopButton.setText("Start");
+        }
     }
 
     @FXML
