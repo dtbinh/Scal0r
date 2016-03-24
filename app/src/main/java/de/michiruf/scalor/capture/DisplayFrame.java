@@ -1,7 +1,6 @@
 package de.michiruf.scalor.capture;
 
 import de.michiruf.scalor.config.Configuration;
-import de.michiruf.scalor.helper.ScreenHelper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,10 +32,11 @@ public class DisplayFrame extends JFrame {
         setBackground(new Color(0, 0, 0, 0));
         setLocationRelativeTo(null);
         setContentPane(imageLabel);
+
+        rearrange();
     }
 
     public void rearrange() {
-        ScreenHelper.showOnScreen(configuration.getOutputScreen() - 1, this);
         setBounds(configuration.getOutputX(), configuration.getOutputY(),
                 configuration.getOutputWidth(), configuration.getOutputHeight());
     }

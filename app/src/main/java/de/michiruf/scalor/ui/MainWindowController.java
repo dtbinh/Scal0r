@@ -22,8 +22,6 @@ public class MainWindowController {
     @Inject
     protected static Configuration configuration;
     @Inject
-    protected static IndicatorFrame indicatorFrame;
-    @Inject
     protected static Capture capture;
     @Inject
     protected static DisplayFrame displayFrame;
@@ -36,8 +34,6 @@ public class MainWindowController {
     private TextField scanWidth;
     @FXML
     private TextField scanHeight;
-    @FXML
-    private TextField scanScreen;
 
     @FXML
     private TextField outputX;
@@ -47,8 +43,6 @@ public class MainWindowController {
     private TextField outputWidth;
     @FXML
     private TextField outputHeight;
-    @FXML
-    private TextField outputScreen;
 
     @FXML
     private Button startStopButton;
@@ -60,24 +54,19 @@ public class MainWindowController {
         initializeTextField(scanY, configuration.getScanY());
         initializeTextField(scanWidth, configuration.getScanWidth());
         initializeTextField(scanHeight, configuration.getScanHeight());
-        initializeTextField(scanScreen, configuration.getScanScreen());
 
         initializeTextField(outputX, configuration.getOutputX());
         initializeTextField(outputY, configuration.getOutputY());
         initializeTextField(outputWidth, configuration.getOutputWidth());
         initializeTextField(outputHeight, configuration.getOutputHeight());
-        initializeTextField(outputScreen, configuration.getOutputScreen());
     }
 
     private void initializeTextField(TextField field, int value) {
         field.setText(Integer.toString(value));
         field.setOnKeyReleased(event -> {
             save();
-            indicatorFrame.rearrange();
             displayFrame.rearrange();
         });
-        field.setOnMousePressed(event -> indicatorFrame.setVisible(true));
-        field.setOnMouseExited(event -> indicatorFrame.setVisible(false));
     }
 
     private void save() {
@@ -85,13 +74,11 @@ public class MainWindowController {
         saveTextField(scanY, configuration::setScanY);
         saveTextField(scanWidth, configuration::setScanWidth);
         saveTextField(scanHeight, configuration::setScanHeight);
-        saveTextField(scanScreen, configuration::setScanScreen);
 
         saveTextField(outputX, configuration::setOutputX);
         saveTextField(outputY, configuration::setOutputY);
         saveTextField(outputWidth, configuration::setOutputWidth);
         saveTextField(outputHeight, configuration::setOutputHeight);
-        saveTextField(outputScreen, configuration::setOutputScreen);
     }
 
     private void saveTextField(TextField field, SaveAction saveAction) {
@@ -104,7 +91,7 @@ public class MainWindowController {
 
     @FXML
     public void onStartStopClick() {
-        if(!capture.isRunning()) {
+        if (!capture.isRunning()) {
             capture.start();
             startStopButton.setText("Stop");
         } else {

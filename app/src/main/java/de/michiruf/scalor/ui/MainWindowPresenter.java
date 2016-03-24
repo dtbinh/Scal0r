@@ -24,7 +24,7 @@ public class MainWindowPresenter extends JFrame {
     public MainWindowPresenter(@Named("mainFxml") String fxmlPath) {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
-        setSize(300, 550);
+        setSize(300, 450);
         int x = Toolkit.getDefaultToolkit().getScreenSize().width / 2 - getSize().width / 2;
         int y = Toolkit.getDefaultToolkit().getScreenSize().height / 2 - getSize().height / 2;
         setLocation(x, y);

@@ -11,7 +11,6 @@ import javax.inject.Named;
  */
 @Module(
         injects = {
-                IndicatorFrame.class,
                 MainWindowPresenter.class
         },
         staticInjections = {
