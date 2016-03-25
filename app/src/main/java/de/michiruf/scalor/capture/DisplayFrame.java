@@ -40,7 +40,9 @@ public class DisplayFrame extends JFrame implements Observer {
     }
 
     public void draw(Image bufferedImage) {
+        // TODO the allocation of the image icon could be the show stopper
         imageLabel.setIcon(new ImageIcon(bufferedImage));
+        bufferedImage.flush(); // TODO is this good?
     }
 
     @Override

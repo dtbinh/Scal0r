@@ -8,6 +8,7 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 dependencies {
     testCompile 'junit:junit:4.12'
+    testCompile 'com.jayway.awaitility:awaitility:1.7.0'
 
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided('com.squareup.dagger:dagger-compiler:1.2.2') {
@@ -19,6 +20,9 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.6.2'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.6.2'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.2'
+
+    compile 'net.java.dev.jna:jna:4.2.2'
+    compile 'net.java.dev.jna:platform:3.5.2'
 }
 
 task runJar(type: Jar) {

@@ -1,5 +1,6 @@
 package de.michiruf.scalor.capture;
 
+import de.michiruf.scalor.capture.monitor.Monitor;
 import de.michiruf.scalor.helper.FrameCounter;
 
 import javax.inject.Inject;
@@ -28,7 +29,7 @@ public class Capture {
     public Capture(Monitor monitor, DisplayFrame displayFrame) {
         this.monitor = monitor;
         this.displayFrame = displayFrame;
-        this.executor = Executors.newScheduledThreadPool(9);
+        this.executor = Executors.newScheduledThreadPool(1); // TODO size?!
     }
 
     public void start() {
@@ -43,7 +44,7 @@ public class Capture {
         });
 
         frameCounter = FrameCounter.createAndStart();
-        executorFuture = executor.scheduleAtFixedRate(this::capture, 0, 15, TimeUnit.MILLISECONDS);
+        executorFuture = executor.scheduleAtFixedRate(this::capture, 0, 1, TimeUnit.MILLISECONDS);
     }
 
     public void stop() {
@@ -60,6 +61,9 @@ public class Capture {
     }
 
     private void capture() {
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY); // TODO is this good?
+        // -> causes blinks on the screen
+
         frameCounter.tick();
         displayFrame.draw(resizeImage(monitor.captureScreen()));
     }

@@ -1,4 +1,4 @@
-package de.michiruf.scalor.capture;
+package de.michiruf.scalor.capture.monitor;
 
 import de.michiruf.scalor.config.Configuration;
 
@@ -8,27 +8,27 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * @author Michael Ruf
  * @since 2016-03-23
  */
 @Singleton
-public class Monitor implements Observer {
+public class RobotMonitor implements Monitor {
 
     private final Robot robot;
     private final Configuration configuration;
     private Rectangle dimens;
 
     @Inject
-    public Monitor(Robot robot, Configuration configuration) {
+    public RobotMonitor(Robot robot, Configuration configuration) {
         this.robot = robot;
         this.configuration = configuration;
         configuration.addObserver(this);
         updateDimens();
     }
 
+    @Override
     public BufferedImage captureScreen() {
         return robot.createScreenCapture(dimens);
     }

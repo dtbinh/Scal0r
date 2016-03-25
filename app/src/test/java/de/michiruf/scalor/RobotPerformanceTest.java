@@ -14,10 +14,10 @@ import java.awt.image.BufferedImage;
  */
 public class RobotPerformanceTest {
 
+    int n = 100;
+
     @Test
     public void testRobotPerformance() throws AWTException {
-        int n = 1000;
-
         Robot robot = new Robot();
         Rectangle area = new Rectangle(0, 330, 1920, 540);
         long start = System.currentTimeMillis();
@@ -31,8 +31,6 @@ public class RobotPerformanceTest {
 
     @Test
     public void testRobotScalingPerformance() throws AWTException {
-        int n = 1000;
-
         Robot robot = new Robot();
         Rectangle area = new Rectangle(0, 330, 1920, 540);
         long start = System.currentTimeMillis();
