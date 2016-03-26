@@ -7,6 +7,7 @@ import javax.inject.Singleton;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Image;
@@ -27,22 +28,28 @@ public class DisplayFrame extends JFrame implements Observer {
     public DisplayFrame(Configuration configuration) {
         this.configuration = configuration;
         configuration.addObserver(this);
-        imageLabel = new JLabel();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // TODO stop capturing on close
         setUndecorated(true);
         setAlwaysOnTop(true);
         setBackground(new Color(0, 0, 0, 0));
         setLocationRelativeTo(null);
+
+        imageLabel = new JLabel();
         setContentPane(imageLabel);
 
         updateBounds();
     }
 
     public void draw(Image bufferedImage) {
-        // TODO the allocation of the image icon could be the show stopper
-        imageLabel.setIcon(new ImageIcon(bufferedImage));
-        bufferedImage.flush(); // TODO is this good?
+        // TODO Maybe improve this by just update the data instead of the ImageIcon
+
+        // SwingUtilities should give more performance
+        SwingUtilities.invokeLater(() -> {
+            imageLabel.setIcon(new ImageIcon(bufferedImage));
+            imageLabel.revalidate();
+            bufferedImage.flush(); // TODO is this good?
+        });
     }
 
     @Override

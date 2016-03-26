@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Michael Ruf
@@ -29,15 +30,19 @@ public class WindowsJNAMonitorPerformanceTest {
 
     @Test
     public void testPerformance() {
-        c.start();
+        new Thread(c::start).start();
+
         Awaitility.await().until(() -> {
             try {
                 Thread.sleep(5000);
-                System.out.print("Windows JNA ");
-                c.stop(); // TODO only 1 tick every time
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+        });
+
+        Awaitility.await().until(() -> {
+            System.out.print("Windows JNA ");
+            c.stop(); // TODO only 1 tick every time // WTF?!
         });
     }
 

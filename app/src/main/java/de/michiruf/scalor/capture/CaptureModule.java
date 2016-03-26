@@ -1,7 +1,6 @@
 package de.michiruf.scalor.capture;
 
 import dagger.Module;
-import de.michiruf.scalor.capture.monitor.Monitor;
 import de.michiruf.scalor.capture.monitor.MonitorModule;
 
 /**

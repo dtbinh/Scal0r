@@ -2,6 +2,7 @@ package de.michiruf.scalor.capture;
 
 import de.michiruf.scalor.capture.monitor.Monitor;
 import de.michiruf.scalor.helper.FrameCounter;
+import de.michiruf.scalor.helper.HighPriorityDefaultThreadFactory;
 
 import javax.inject.Inject;
 import java.awt.Image;
@@ -29,7 +30,7 @@ public class Capture {
     public Capture(Monitor monitor, DisplayFrame displayFrame) {
         this.monitor = monitor;
         this.displayFrame = displayFrame;
-        this.executor = Executors.newScheduledThreadPool(1); // TODO size?!
+        this.executor = Executors.newScheduledThreadPool(1, new HighPriorityDefaultThreadFactory());
     }
 
     public void start() {
@@ -44,7 +45,8 @@ public class Capture {
         });
 
         frameCounter = FrameCounter.createAndStart();
-        executorFuture = executor.scheduleAtFixedRate(this::capture, 0, 1, TimeUnit.MILLISECONDS);
+        // 100 frames maximum should be good enough
+        executorFuture = executor.scheduleAtFixedRate(this::capture, 0, 10, TimeUnit.MILLISECONDS);
     }
 
     public void stop() {
@@ -61,9 +63,6 @@ public class Capture {
     }
 
     private void capture() {
-        Thread.currentThread().setPriority(Thread.MAX_PRIORITY); // TODO is this good?
-        // -> causes blinks on the screen
-
         frameCounter.tick();
         displayFrame.draw(resizeImage(monitor.captureScreen()));
     }
