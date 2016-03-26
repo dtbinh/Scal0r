@@ -3,6 +3,7 @@ package de.michiruf.scalor.capture;
 import de.michiruf.scalor.capture.monitor.Monitor;
 import de.michiruf.scalor.helper.FrameCounter;
 import de.michiruf.scalor.helper.HighPriorityDefaultThreadFactory;
+import de.michiruf.scalor.helper.ImageCompat;
 
 import javax.inject.Inject;
 import java.awt.Image;
@@ -69,6 +70,7 @@ public class Capture {
 
     // TODO make scaling configurable
     private Image resizeImage(BufferedImage bufferedImage) {
+        bufferedImage = ImageCompat.toCompatibleImage(bufferedImage);
         return bufferedImage.getScaledInstance(bufferedImage.getWidth(), bufferedImage.getHeight() * 2,
                 Image.SCALE_FAST);
     }

@@ -43,6 +43,7 @@ public class DisplayFrame extends JFrame implements Observer {
 
     public void draw(Image bufferedImage) {
         // TODO Maybe improve this by just update the data instead of the ImageIcon
+        // TODO Maybe do not use a JFrame and a Label to draw the image
 
         // SwingUtilities should give more performance
         SwingUtilities.invokeLater(() -> {
