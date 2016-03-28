@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 
 /**
  * @author Consty
@@ -36,5 +37,9 @@ public class ImageCompat {
 
         // return the new optimized image
         return new_image;
+    }
+
+    public static byte[] getBufferedImageData(BufferedImage image) {
+        return ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
     }
 }

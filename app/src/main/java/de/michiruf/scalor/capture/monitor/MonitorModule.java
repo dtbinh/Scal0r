@@ -1,5 +1,8 @@
 package de.michiruf.scalor.capture.monitor;
 
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLProfile;
 import dagger.Module;
 import dagger.Provides;
 import de.michiruf.scalor.config.Configuration;
@@ -25,6 +28,18 @@ public class MonitorModule {
     @Provides
     @Singleton
     public Monitor provideMonitor(Configuration configuration) {
+//        try {
+//            GLProfile defaultProfile = GLProfile.getDefault();
+//            GLCapabilities capabilities = new GLCapabilities(defaultProfile);
+//            capabilities.setRedBits(8);
+//            capabilities.setBlueBits(8);
+//            capabilities.setGreenBits(8);
+//            capabilities.setAlphaBits(8);
+//            return new OpenGLMonitor(configuration, capabilities);
+//        } catch (Throwable e) {
+//            e.printStackTrace();
+//        }
+
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             return new WindowsJNAMonitor(configuration);
         } else {
