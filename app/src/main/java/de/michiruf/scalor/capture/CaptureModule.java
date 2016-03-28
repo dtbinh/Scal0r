@@ -1,6 +1,7 @@
 package de.michiruf.scalor.capture;
 
 import dagger.Module;
+import de.michiruf.scalor.capture.display.DisplayModule;
 import de.michiruf.scalor.capture.monitor.MonitorModule;
 
 /**
@@ -9,11 +10,11 @@ import de.michiruf.scalor.capture.monitor.MonitorModule;
  */
 @Module(
         includes = {
+                DisplayModule.class,
                 MonitorModule.class
         },
         injects = {
-                Capture.class,
-                DisplayFrame.class
+                Capture.class
         },
         library = true,
         complete = false

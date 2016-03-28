@@ -1,7 +1,6 @@
 package de.michiruf.scalor.ui;
 
 import de.michiruf.scalor.capture.Capture;
-import de.michiruf.scalor.capture.DisplayFrame;
 import de.michiruf.scalor.config.Configuration;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -23,8 +22,6 @@ public class MainWindowController {
     protected static Configuration configuration;
     @Inject
     protected static Capture capture;
-    @Inject
-    protected static DisplayFrame displayFrame;
 
     @FXML
     private TextField scanX;
@@ -63,9 +60,7 @@ public class MainWindowController {
 
     private void initializeTextField(TextField field, int value) {
         field.setText(Integer.toString(value));
-        field.setOnKeyReleased(event -> {
-            save();
-        });
+        field.setOnKeyReleased(event -> save());
     }
 
     private void save() {

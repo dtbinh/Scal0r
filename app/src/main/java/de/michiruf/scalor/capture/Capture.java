@@ -1,5 +1,6 @@
 package de.michiruf.scalor.capture;
 
+import de.michiruf.scalor.capture.display.Display;
 import de.michiruf.scalor.capture.monitor.Monitor;
 import de.michiruf.scalor.helper.FrameCounter;
 import de.michiruf.scalor.helper.HighPriorityDefaultThreadFactory;
@@ -22,21 +23,21 @@ import java.util.concurrent.TimeUnit;
 public class Capture {
 
     private final Monitor monitor;
-    private final DisplayFrame displayFrame;
+    private final Display display;
     private final ScheduledExecutorService executor;
     private ScheduledFuture<?> executorFuture;
     private FrameCounter frameCounter;
 
     @Inject
-    public Capture(Monitor monitor, DisplayFrame displayFrame) {
+    public Capture(Monitor monitor, Display display) {
         this.monitor = monitor;
-        this.displayFrame = displayFrame;
+        this.display = display;
         this.executor = Executors.newScheduledThreadPool(1, new HighPriorityDefaultThreadFactory());
     }
 
     public void start() {
-        displayFrame.setVisible(true);
-        displayFrame.addKeyListener(new KeyAdapter() {
+        display.setVisible(true);
+        display.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
@@ -51,7 +52,7 @@ public class Capture {
     }
 
     public void stop() {
-        displayFrame.setVisible(false);
+        display.setVisible(false);
         if (executorFuture != null) {
             executorFuture.cancel(true);
         }
@@ -60,18 +61,18 @@ public class Capture {
     }
 
     public boolean isRunning() {
-        return displayFrame.isVisible();
+        return display.isVisible();
     }
 
     private void capture() {
         frameCounter.tick();
-        displayFrame.draw(resizeImage(monitor.captureScreen()));
+        display.draw(resizeImage(monitor.captureScreen()));
     }
 
     // TODO make scaling configurable
     private Image resizeImage(BufferedImage bufferedImage) {
-        bufferedImage = ImageCompat.toCompatibleImage(bufferedImage);
-        return bufferedImage.getScaledInstance(bufferedImage.getWidth(), bufferedImage.getHeight() * 2,
-                Image.SCALE_FAST);
+        return ImageCompat.toCompatibleImage(bufferedImage)
+                .getScaledInstance(bufferedImage.getWidth(), bufferedImage.getHeight() * 2,
+                        Image.SCALE_FAST);
     }
 }
