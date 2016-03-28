@@ -22,12 +22,12 @@ import java.nio.IntBuffer;
  * @since 2016-03-28
  */
 @Singleton
-public class OpenGLDisplay extends DisplayFrame {
+public class OpenGLDisplayFrame extends DisplayFrame {
 
     private final MyGLCanvas canvas;
 
     @Inject
-    public OpenGLDisplay(Configuration configuration) {
+    public OpenGLDisplayFrame(Configuration configuration) {
         super(configuration);
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // TODO stop capturing on close
@@ -89,7 +89,7 @@ public class OpenGLDisplay extends DisplayFrame {
                     getWidth(),
                     getHeight(),
                     0,                  // Border (must be zero)
-                    GL.GL_RGB,         // Format
+                    GL.GL_RGB,          // Format
                     GL.GL_UNSIGNED_INT, // Data type
                     IntBuffer.wrap(ImageDataHelper.getBufferedImageIntData(image))
             );

@@ -25,7 +25,7 @@ public class DisplayModule {
     @Singleton
     public Display provideDisplay(Configuration configuration) {
         if (OpenGLHelper.isOpenGLSupported()) {
-            return new OpenGLDisplay(configuration);
+            return new OpenGLDisplayFrame(configuration);
         }
 
         return new GraphicsDisplayFrame(configuration);
