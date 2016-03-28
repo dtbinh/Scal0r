@@ -23,9 +23,10 @@ public class DisplayModule {
     @Provides
     @Singleton
     public Display provideDisplay(Configuration configuration) {
-        return new GraphicsDisplayFrame(configuration);
+        if (true) {// TODO check for opengl support first
+            return new OpenGLDisplay(configuration);
+        } else {
+            return new GraphicsDisplayFrame(configuration);
+        }
     }
-
-    // TODO Maybe improve this by just update the data instead of the ImageIcon
-    // TODO Maybe do not use a JFrame and a Label to draw the image
 }

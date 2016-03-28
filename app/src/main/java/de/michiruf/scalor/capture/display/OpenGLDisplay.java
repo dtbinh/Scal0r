@@ -3,7 +3,7 @@ package de.michiruf.scalor.capture.display;
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
-import com.jogamp.opengl.awt.GLJPanel;
+import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.util.FPSAnimator;
 import de.michiruf.scalor.config.Configuration;
 import de.michiruf.scalor.helper.ImageCompat;
@@ -11,9 +11,9 @@ import de.michiruf.scalor.helper.ImageCompat;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
 /**
@@ -23,7 +23,7 @@ import java.nio.ByteBuffer;
 @Singleton
 public class OpenGLDisplay extends DisplayFrame {
 
-    private BufferedImage currentFrameImage;
+    private final MyGLCanvas canvas;
 
     @Inject
     public OpenGLDisplay(Configuration configuration) {
@@ -35,41 +35,39 @@ public class OpenGLDisplay extends DisplayFrame {
         setBackground(new Color(0, 0, 0, 0));
         setLocationRelativeTo(null);
 
-        updateBounds();
+        setLayout(new BorderLayout());
+        canvas = new MyGLCanvas();
+        add(canvas, BorderLayout.CENTER);
 
-        setContentPane(new MyGLJPanel());
+        updateBounds();
     }
 
     @Override
     public void draw(Image image) {
-        currentFrameImage = (BufferedImage) image;
+        canvas.draw(image);
     }
 
-    private class MyGLJPanel extends GLJPanel implements GLEventListener {
+    private static class MyGLCanvas extends GLCanvas implements GLEventListener {
 
-        private FPSAnimator animator;
+        private Image image;
 
-        public MyGLJPanel() {
+        public MyGLCanvas() {
+            super();
             addGLEventListener(this);
         }
 
         @Override
         public void init(GLAutoDrawable drawable) {
-            GL gl = drawable.getGL();
-
-            // Global settings.
-            gl.glEnable(GL.GL_DEPTH_TEST);
-            gl.glDepthFunc(GL.GL_LEQUAL);
-            gl.glClearColor(0f, 0f, 0f, 1f);
-
-            // Start animator (which should be a field).
-            animator = new FPSAnimator(this, 60);
-            animator.start();
+//            GL gl = drawable.getGL();
+//
+//            // Global settings.
+//            gl.glEnable(GL.GL_DEPTH_TEST);
+//            gl.glDepthFunc(GL.GL_LEQUAL);
+//            gl.glClearColor(0f, 0f, 0f, 1f);
         }
 
         @Override
         public void dispose(GLAutoDrawable drawable) {
-
         }
 
         @Override
@@ -87,7 +85,7 @@ public class OpenGLDisplay extends DisplayFrame {
                     0,                  // Border (must be zero)
                     GL.GL_RGB,          // Format
                     GL.GL_BYTE,         // Data type
-                    ByteBuffer.wrap(ImageCompat.getBufferedImageData(currentFrameImage))
+                    ByteBuffer.wrap(ImageCompat.getImageData(image))
             );
             gl.glDisable(GL.GL_BLEND);
         }
@@ -95,6 +93,11 @@ public class OpenGLDisplay extends DisplayFrame {
         @Override
         public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
             setBounds(0, 0, width, height);
+        }
+
+        private void draw(Image image) {
+            this.image = image;
+            display();
         }
     }
 }

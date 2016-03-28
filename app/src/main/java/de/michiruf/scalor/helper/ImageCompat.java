@@ -1,8 +1,11 @@
 package de.michiruf.scalor.helper;
 
+import sun.awt.image.ToolkitImage;
+
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
@@ -39,7 +42,20 @@ public class ImageCompat {
         return new_image;
     }
 
-    public static byte[] getBufferedImageData(BufferedImage image) {
+    public static byte[] getImageData(Image image) {
+        if (image instanceof BufferedImage) {
+            return getImageData((BufferedImage) image);
+        } else if (image instanceof ToolkitImage) {
+            return getImageData((ToolkitImage) image);
+        }
+        return new byte[0];
+    }
+
+    public static byte[] getImageData(BufferedImage image) {
         return ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+    }
+
+    public static byte[] getImageData(ToolkitImage image) {
+        return getImageData(image.getBufferedImage());
     }
 }
