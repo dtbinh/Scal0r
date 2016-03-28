@@ -6,4 +6,5 @@ build/
 *.iml
 *.properties
 !/gradle/wrapper/gradle-wrapper.properties
+*.log
 settings.json

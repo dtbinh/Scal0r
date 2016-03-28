@@ -1,7 +1,6 @@
 //package de.michiruf.scalor.capture.monitor;
 //
 //import com.jogamp.opengl.GL2;
-//import com.jogamp.opengl.GLCapabilities;
 //import com.jogamp.opengl.awt.GLCanvas;
 //import de.michiruf.scalor.config.Configuration;
 //
@@ -21,9 +20,9 @@
 //    private final Configuration configuration;
 //
 //    @Inject
-//    public OpenGLMonitor(Configuration configuration, GLCapabilities glCapabilities) {
+//    public OpenGLMonitor(Configuration configuration) {
 //        this.configuration = configuration;
-//        canvas = new GLCanvas(glCapabilities);
+//        canvas = new GLCanvas();
 //        configuration.addObserver(this);
 //        updateDimens();
 //    }

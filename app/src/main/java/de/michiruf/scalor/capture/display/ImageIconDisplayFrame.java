@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import java.awt.Color;
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Michael Ruf
@@ -38,7 +38,7 @@ public class ImageIconDisplayFrame extends DisplayFrame {
     }
 
     @Override
-    public void draw(Image image) {
+    public void draw(BufferedImage image) {
         // SwingUtilities should give more performance
         SwingUtilities.invokeLater(() -> {
             imageLabel.setIcon(new ImageIcon(image));

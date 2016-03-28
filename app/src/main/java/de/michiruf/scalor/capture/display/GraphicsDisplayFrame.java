@@ -8,6 +8,7 @@ import javax.swing.WindowConstants;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 /**
  * @author Michael Ruf
@@ -32,7 +33,7 @@ public class GraphicsDisplayFrame extends DisplayFrame {
     }
 
     @Override
-    public void draw(Image image) {
+    public void draw(BufferedImage image) {
         currentFrameImage = image;
         repaint();
     }

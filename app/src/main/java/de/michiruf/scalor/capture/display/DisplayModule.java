@@ -3,6 +3,7 @@ package de.michiruf.scalor.capture.display;
 import dagger.Module;
 import dagger.Provides;
 import de.michiruf.scalor.config.Configuration;
+import de.michiruf.scalor.helper.OpenGLHelper;
 
 import javax.inject.Singleton;
 
@@ -23,10 +24,10 @@ public class DisplayModule {
     @Provides
     @Singleton
     public Display provideDisplay(Configuration configuration) {
-        if (true) {// TODO check for opengl support first
+        if (OpenGLHelper.isOpenGLSupported()) {
             return new OpenGLDisplay(configuration);
-        } else {
-            return new GraphicsDisplayFrame(configuration);
         }
+
+        return new GraphicsDisplayFrame(configuration);
     }
 }

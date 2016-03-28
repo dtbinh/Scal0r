@@ -1,20 +1,21 @@
 package de.michiruf.scalor.capture.display;
 
+import com.jogamp.opengl.DebugGL4;
 import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
-import com.jogamp.opengl.util.FPSAnimator;
 import de.michiruf.scalor.config.Configuration;
-import de.michiruf.scalor.helper.ImageCompat;
+import de.michiruf.scalor.helper.ImageDataHelper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Image;
-import java.nio.ByteBuffer;
+import java.awt.image.BufferedImage;
+import java.nio.IntBuffer;
 
 /**
  * @author Michael Ruf
@@ -43,13 +44,13 @@ public class OpenGLDisplay extends DisplayFrame {
     }
 
     @Override
-    public void draw(Image image) {
+    public void draw(BufferedImage image) {
         canvas.draw(image);
     }
 
     private static class MyGLCanvas extends GLCanvas implements GLEventListener {
 
-        private Image image;
+        private BufferedImage image;
 
         public MyGLCanvas() {
             super();
@@ -72,6 +73,11 @@ public class OpenGLDisplay extends DisplayFrame {
 
         @Override
         public void display(GLAutoDrawable drawable) {
+            // remove this
+            GL4 gl4 = drawable.getGL().getGL4();
+            drawable.setGL(new DebugGL4(gl4));
+            // -----
+
             GL gl = drawable.getGL();
 
             gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
@@ -83,9 +89,9 @@ public class OpenGLDisplay extends DisplayFrame {
                     getWidth(),
                     getHeight(),
                     0,                  // Border (must be zero)
-                    GL.GL_RGB,          // Format
-                    GL.GL_BYTE,         // Data type
-                    ByteBuffer.wrap(ImageCompat.getImageData(image))
+                    GL.GL_RGB,         // Format
+                    GL.GL_UNSIGNED_INT, // Data type
+                    IntBuffer.wrap(ImageDataHelper.getBufferedImageIntData(image))
             );
             gl.glDisable(GL.GL_BLEND);
         }
@@ -95,7 +101,7 @@ public class OpenGLDisplay extends DisplayFrame {
             setBounds(0, 0, width, height);
         }
 
-        private void draw(Image image) {
+        private void draw(BufferedImage image) {
             this.image = image;
             display();
         }

@@ -1,11 +1,9 @@
 package de.michiruf.scalor.capture.monitor;
 
-import com.jogamp.opengl.GLCapabilities;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLProfile;
 import dagger.Module;
 import dagger.Provides;
 import de.michiruf.scalor.config.Configuration;
+import de.michiruf.scalor.helper.OpenGLHelper;
 
 import javax.inject.Singleton;
 import java.awt.AWTException;
@@ -28,27 +26,21 @@ public class MonitorModule {
     @Provides
     @Singleton
     public Monitor provideMonitor(Configuration configuration) {
-//        try {
-//            GLProfile defaultProfile = GLProfile.getDefault();
-//            GLCapabilities capabilities = new GLCapabilities(defaultProfile);
-//            capabilities.setRedBits(8);
-//            capabilities.setBlueBits(8);
-//            capabilities.setGreenBits(8);
-//            capabilities.setAlphaBits(8);
-//            return new OpenGLMonitor(configuration, capabilities);
-//        } catch (Throwable e) {
-//            e.printStackTrace();
-//        }
+        // TODO uncomment:
+        //if (OpenGLHelper.isOpenGLSupported()) {
+        //    return new OpenGLMonitor(configuration);
+        //}
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             return new WindowsJNAMonitor(configuration);
-        } else {
-            try {
-                return new RobotMonitor(new Robot(), configuration);
-            } catch (AWTException e) {
-                e.printStackTrace();
-                return null;
-            }
         }
+
+        try {
+            return new RobotMonitor(new Robot(), configuration);
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

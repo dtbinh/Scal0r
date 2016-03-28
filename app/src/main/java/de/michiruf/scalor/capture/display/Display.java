@@ -1,7 +1,7 @@
 package de.michiruf.scalor.capture.display;
 
-import java.awt.Image;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.util.Observer;
 
 /**
@@ -10,7 +10,7 @@ import java.util.Observer;
  */
 public interface Display extends Observer {
 
-    void draw(Image image);
+    void draw(BufferedImage image);
 
     void setVisible(boolean visible);
 
