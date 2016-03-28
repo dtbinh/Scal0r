@@ -71,6 +71,11 @@ public class Capture {
 
     // TODO make scaling configurable
     private Image resizeImage(BufferedImage bufferedImage) {
+        if (bufferedImage == null) // Fail safe
+            return null;
+
+        // TODO we could use OpenGL here: new GLU().gluScaleImage();
+
         return ImageCompat.toCompatibleImage(bufferedImage)
                 .getScaledInstance(bufferedImage.getWidth(), bufferedImage.getHeight() * 2,
                         Image.SCALE_FAST);

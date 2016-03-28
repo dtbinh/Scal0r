@@ -23,7 +23,7 @@ public class DisplayModule {
     @Provides
     @Singleton
     public Display provideDisplay(Configuration configuration) {
-        return new ImageIconDisplayFrame(configuration);
+        return new GraphicsDisplayFrame(configuration);
     }
 
     // TODO Maybe improve this by just update the data instead of the ImageIcon
