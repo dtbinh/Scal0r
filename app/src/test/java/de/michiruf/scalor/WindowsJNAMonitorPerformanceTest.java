@@ -8,11 +8,13 @@ import de.michiruf.scalor.capture.Capture;
 import de.michiruf.scalor.capture.monitor.Monitor;
 import de.michiruf.scalor.capture.monitor.WindowsJNAMonitor;
 import de.michiruf.scalor.config.Configuration;
+import de.michiruf.scalor.helper.FrameCounter;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.inject.Singleton;
-import java.util.concurrent.TimeUnit;
+import java.lang.reflect.Field;
 
 /**
  * @author Michael Ruf
@@ -28,22 +30,45 @@ public class WindowsJNAMonitorPerformanceTest {
         c = o.get(Capture.class);
     }
 
-    @Test
+    //    @Test
     public void testPerformance() {
         new Thread(c::start).start();
 
-        Awaitility.await().until(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+//        try {
+//            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> false);
+//        } catch (ConditionTimeoutException e) {
+//            // Do nothing
+//        }
 
-        Awaitility.await().until(() -> {
-            System.out.print("Windows JNA ");
-            c.stop(); // TODO only 1 tick every time // WTF?!
-        });
+        long start = System.currentTimeMillis();
+        long timeout = 5000;
+        Awaitility.await().until(() -> System.currentTimeMillis() - start > timeout);
+
+        System.out.print("Windows JNA ");
+        c.stop(); // TODO only 1 tick every time // WTF?!
+    }
+
+    @Test
+    public void testPerformance2() {
+        c.start();
+
+        FrameCounter frameCounter = null;
+        try {
+            Field field = c.getClass().getDeclaredField("frameCounter");
+            field.setAccessible(true);
+            frameCounter = (FrameCounter) field.get(c);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        assert frameCounter != null;
+        Awaitility.await().until(
+                Awaitility.fieldIn(frameCounter).ofType(long.class).andWithName("ticks"),
+                Matchers.equalTo(5l)
+        );
+
+        System.out.print("Windows JNA ");
+        c.stop();
     }
 
     @Module(
