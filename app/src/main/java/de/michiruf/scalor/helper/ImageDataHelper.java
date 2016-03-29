@@ -39,7 +39,7 @@ public class ImageDataHelper {
                 // to the next consecutive array elements, so we got red, green, blue..
                 // red, green, blue, and so on..
                 graphics.setColor(new Color(buffer.get() * 2, buffer.get() * 2, buffer.get() * 2));
-                graphics.drawRect(w, h, 1, 1);
+                graphics.drawRect(w, height - h, 1, 1);
             }
         }
         return screenshot;

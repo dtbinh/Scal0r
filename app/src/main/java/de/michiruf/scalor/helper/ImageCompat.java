@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
  * @author Consty
  * @see <a href="http://stackoverflow.com/questions/196890/java2d-performance-issues">Stackoverflow</a>
  */
+@Deprecated
 public class ImageCompat {
 
     public static BufferedImage toCompatibleImage(BufferedImage image) {

@@ -9,12 +9,9 @@ import com.jogamp.opengl.GLProfile;
  */
 public class OpenGLHelper {
 
+    // TODO Is this good?
     public static boolean isOpenGLSupported() {
-        return true; // TODO
-
-        // See:
-        // http://www.coderanch.com/t/587914/java/java/JOGL-offscreenDrawable-PBuffers-save-png
-//        GLDrawableFactory.getFactory(GLProfile.getDefault()).canCreateGLPbuffer(GLProfile.getDefaultDevice());
-        // see GLDrawableFactory.getDefaultDevice
+        GLDrawableFactory factory = GLDrawableFactory.getFactory(GLProfile.getDefault());
+        return factory.canCreateGLPbuffer(factory.getDefaultDevice(), GLProfile.getDefault());
     }
 }
