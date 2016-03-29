@@ -41,7 +41,7 @@ public class WindowsJNAMonitor implements Monitor {
     }
 
     @Override
-    public BufferedImage captureScreen() {
+    public BufferedImage captureScreenWithBufferedImage() {
         WinDef.HDC windowDC = GDI.GetDC(USER.GetDesktopWindow());
         WinDef.HBITMAP outputBitmap =
                 GDI.CreateCompatibleBitmap(windowDC,
@@ -79,6 +79,12 @@ public class WindowsJNAMonitor implements Monitor {
         } finally {
             GDI.DeleteObject(outputBitmap);
         }
+    }
+
+    @Override
+    public byte[] captureScreenWithByteArray() {
+        // We do not need this kind here
+        return null;
     }
 
     @Override

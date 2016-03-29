@@ -66,6 +66,7 @@ public class Capture {
 
     private void capture() {
         frameCounter.tick();
-        display.draw(monitor.captureScreen());
+        display.draw(monitor.captureScreenWithBufferedImage());
+        display.draw(monitor.captureScreenWithByteArray());
     }
 }

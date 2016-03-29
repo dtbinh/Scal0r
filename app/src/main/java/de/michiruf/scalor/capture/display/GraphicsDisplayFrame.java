@@ -1,6 +1,8 @@
 package de.michiruf.scalor.capture.display;
 
 import de.michiruf.scalor.config.Configuration;
+import de.michiruf.scalor.helper.ImageCompat;
+import de.michiruf.scalor.helper.ImageDataHelper;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,7 +19,9 @@ import java.awt.image.BufferedImage;
 @Singleton
 public class GraphicsDisplayFrame extends DisplayFrame {
 
-    private Image currentFrameImage;
+    private BufferedImage currentFrameImage;
+    private boolean isFirstImage = true;
+    private boolean gotBufferedImage = false;
 
     @Inject
     public GraphicsDisplayFrame(Configuration configuration) {
@@ -34,18 +38,37 @@ public class GraphicsDisplayFrame extends DisplayFrame {
 
     @Override
     public void draw(BufferedImage image) {
+        if (image == null) {
+            return;
+        }
+        gotBufferedImage = true;
         currentFrameImage = image;
+        repaint();
+    }
+
+    @Override
+    public void draw(byte[] image) {
+        if (isFirstImage) {
+            isFirstImage = false;
+            return;
+        }
+        if (gotBufferedImage || image == null) {
+            return;
+        }
+        currentFrameImage = ImageDataHelper.getBufferedImage(getWidth(), getHeight(), image);
         repaint();
     }
 
     @Override
     public void paint(Graphics g) {
         //super.paint(g); // NOTE is this really good to skip this?
-
         if (currentFrameImage == null)
             return;
 
-        g.drawImage(currentFrameImage, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(ImageCompat.toCompatibleImage(currentFrameImage)
+                        .getScaledInstance(currentFrameImage.getWidth(), currentFrameImage.getHeight() * 2,
+                                Image.SCALE_FAST),
+                0, 0, getWidth(), getHeight(), null);
         g.dispose();
     }
 }

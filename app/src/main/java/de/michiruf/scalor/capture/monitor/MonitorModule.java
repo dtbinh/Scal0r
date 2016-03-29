@@ -26,10 +26,9 @@ public class MonitorModule {
     @Provides
     @Singleton
     public Monitor provideMonitor(Configuration configuration) {
-        // TODO uncomment:
-        //if (OpenGLHelper.isOpenGLSupported()) {
-        //    return new OpenGLMonitor(configuration);
-        //}
+        if (OpenGLHelper.isOpenGLSupported()) {
+            return new OpenGLMonitor(configuration);
+        }
 
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             return new WindowsJNAMonitor(configuration);

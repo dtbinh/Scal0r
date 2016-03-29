@@ -9,5 +9,7 @@ import java.util.Observer;
  */
 public interface Monitor extends Observer {
 
-    BufferedImage captureScreen();
+    BufferedImage captureScreenWithBufferedImage();
+
+    byte[] captureScreenWithByteArray();
 }
