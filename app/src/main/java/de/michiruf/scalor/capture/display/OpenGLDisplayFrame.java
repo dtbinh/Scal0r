@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
  * @author Michael Ruf
  * @since 2016-03-28
  */
+// TODO cleanup some stuff. Got 4gb ram!!!
 @Singleton
 public class OpenGLDisplayFrame extends DisplayFrame implements GLEventListener {
 

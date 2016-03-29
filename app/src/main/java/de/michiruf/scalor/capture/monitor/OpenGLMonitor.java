@@ -44,6 +44,7 @@ public class OpenGLMonitor implements Monitor {
             gl.glReadPixels(x, y, width, height, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, buffer);
             data[0] = buffer.array();
         });
+        // TODO better waiting mechanism
         while (data[0] == null) {
             // Just wait for it
         }

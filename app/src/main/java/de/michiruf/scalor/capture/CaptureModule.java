@@ -3,6 +3,7 @@ package de.michiruf.scalor.capture;
 import dagger.Module;
 import de.michiruf.scalor.capture.display.DisplayModule;
 import de.michiruf.scalor.capture.monitor.MonitorModule;
+import de.michiruf.scalor.capture.scaling.ScalingModule;
 
 /**
  * @author Michael Ruf
@@ -11,7 +12,8 @@ import de.michiruf.scalor.capture.monitor.MonitorModule;
 @Module(
         includes = {
                 DisplayModule.class,
-                MonitorModule.class
+                MonitorModule.class,
+                ScalingModule.class
         },
         injects = {
                 Capture.class

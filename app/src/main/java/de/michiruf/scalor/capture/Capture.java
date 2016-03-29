@@ -2,6 +2,7 @@ package de.michiruf.scalor.capture;
 
 import de.michiruf.scalor.capture.display.Display;
 import de.michiruf.scalor.capture.monitor.Monitor;
+import de.michiruf.scalor.capture.scaling.Scaling;
 import de.michiruf.scalor.helper.FrameCounter;
 import de.michiruf.scalor.helper.HighPriorityDefaultThreadFactory;
 
@@ -20,14 +21,16 @@ import java.util.concurrent.TimeUnit;
 public class Capture {
 
     private final Monitor monitor;
+    private final Scaling scaling;
     private final Display display;
     private final ScheduledExecutorService executor;
     private ScheduledFuture<?> executorFuture;
     private FrameCounter frameCounter;
 
     @Inject
-    public Capture(Monitor monitor, Display display) {
+    public Capture(Monitor monitor, Scaling scaling, Display display) {
         this.monitor = monitor;
+        this.scaling = scaling;
         this.display = display;
         this.executor = Executors.newScheduledThreadPool(1, new HighPriorityDefaultThreadFactory());
     }
@@ -63,6 +66,6 @@ public class Capture {
 
     private void capture() {
         frameCounter.tick();
-        display.draw(monitor.captureScreen());
+        display.draw(scaling.scale(monitor.captureScreen()));
     }
 }
