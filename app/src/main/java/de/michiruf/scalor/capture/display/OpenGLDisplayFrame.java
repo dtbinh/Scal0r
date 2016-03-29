@@ -1,11 +1,12 @@
 package de.michiruf.scalor.capture.display;
 
-import com.jogamp.opengl.DebugGL4;
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GL4;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
 import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.util.GLPixelBuffer;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
 import de.michiruf.scalor.config.Configuration;
 import de.michiruf.scalor.helper.ImageDataHelper;
 
@@ -22,9 +23,10 @@ import java.nio.ByteBuffer;
  * @since 2016-03-28
  */
 @Singleton
-public class OpenGLDisplayFrame extends DisplayFrame {
+public class OpenGLDisplayFrame extends DisplayFrame implements GLEventListener {
 
-    private final MyGLCanvas canvas;
+    private final GLCanvas canvas;
+    private byte[] image;
 
     @Inject
     public OpenGLDisplayFrame(Configuration configuration) {
@@ -37,7 +39,9 @@ public class OpenGLDisplayFrame extends DisplayFrame {
         setLocationRelativeTo(null);
 
         setLayout(new BorderLayout());
-        canvas = new MyGLCanvas();
+        canvas = new GLCanvas() {{
+            addGLEventListener(OpenGLDisplayFrame.this);
+        }};
         add(canvas, BorderLayout.CENTER);
 
         updateBounds();
@@ -50,64 +54,44 @@ public class OpenGLDisplayFrame extends DisplayFrame {
         }
 
         if (image instanceof BufferedImage) {
-            canvas.draw(ImageDataHelper.getImageByteData((BufferedImage) image));
+            this.image = ImageDataHelper.getRGBData((BufferedImage) image);
+            canvas.display();
         } else if (image instanceof byte[]) {
-            canvas.draw((byte[]) image);
+            this.image = (byte[]) image;
+            canvas.display();
         }
     }
 
-    private static class MyGLCanvas extends GLCanvas implements GLEventListener {
+    @Override
+    public void init(GLAutoDrawable drawable) {
+    }
 
-        private byte[] image;
+    @Override
+    public void dispose(GLAutoDrawable drawable) {
+    }
 
-        public MyGLCanvas() {
-            super();
-            addGLEventListener(this);
-        }
+    @Override
+    public void display(GLAutoDrawable drawable) {
+        drawable.getContext().makeCurrent();
+        GL gl = drawable.getGL();
 
-        @Override
-        public void init(GLAutoDrawable drawable) {
-        }
+        TextureData textureData = new TextureData(
+                drawable.getGLProfile(),
+                GL.GL_RGB,
+                getWidth(),
+                getHeight(),
+                0,
+                new GLPixelBuffer.GLPixelAttributes(GL.GL_RGB, GL.GL_UNSIGNED_BYTE),
+                false,
+                false,
+                false,
+                ByteBuffer.wrap(image),
+                null
+        );
+        new Texture(gl, textureData);
+    }
 
-        @Override
-        public void dispose(GLAutoDrawable drawable) {
-        }
-
-        @Override
-        public void display(GLAutoDrawable drawable) {
-            // TODO we could use OpenGL here to scale also: new GLU().gluScaleImage();
-
-            // TODO remove this
-            GL4 gl4 = drawable.getGL().getGL4();
-            drawable.setGL(new DebugGL4(gl4));
-            // -----
-
-            GL gl = drawable.getGL();
-            gl.glClear(GL.GL_COLOR_BUFFER_BIT); // TODO need this?
-            gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-            gl.glEnable(GL.GL_BLEND);
-            gl.glTexImage2D(
-                    GL.GL_TEXTURE_2D,
-                    0,                  // Detail level
-                    GL.GL_RGB,
-                    getWidth(),
-                    getHeight(),
-                    0,                  // Border (must be zero)
-                    GL.GL_RGB,          // Format
-                    GL.GL_BYTE,         // Data type
-                    ByteBuffer.wrap(image)
-            );
-            gl.glDisable(GL.GL_BLEND);
-        }
-
-        @Override
-        public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-            setBounds(0, 0, width, height);
-        }
-
-        private void draw(byte[] image) {
-            this.image = image;
-            display();
-        }
+    @Override
+    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
     }
 }

@@ -1,7 +1,6 @@
 package de.michiruf.scalor.capture.display;
 
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
 import java.util.Observer;
 
 /**

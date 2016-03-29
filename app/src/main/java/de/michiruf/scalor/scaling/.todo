@@ -1,1 +1,6 @@
 Put all scaling stuff in here
+
+
+
+
+    // TODO we could use OpenGL here to scale also: new GLU().gluScaleImage();

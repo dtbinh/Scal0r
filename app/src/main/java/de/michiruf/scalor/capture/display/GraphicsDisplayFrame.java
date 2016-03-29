@@ -1,7 +1,6 @@
 package de.michiruf.scalor.capture.display;
 
 import de.michiruf.scalor.config.Configuration;
-import de.michiruf.scalor.helper.ImageCompat;
 import de.michiruf.scalor.helper.ImageDataHelper;
 
 import javax.inject.Inject;
@@ -53,9 +52,9 @@ public class GraphicsDisplayFrame extends DisplayFrame {
         if (currentFrameImage == null)
             return;
 
-        g.drawImage(ImageCompat.toCompatibleImage(currentFrameImage)
-                        .getScaledInstance(currentFrameImage.getWidth(), currentFrameImage.getHeight() * 2,
-                                Image.SCALE_FAST),
+        g.drawImage(currentFrameImage.getScaledInstance(
+                        currentFrameImage.getWidth(), currentFrameImage.getHeight() * 2,
+                        Image.SCALE_FAST),
                 0, 0, getWidth(), getHeight(), null);
         g.dispose();
     }

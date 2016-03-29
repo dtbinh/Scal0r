@@ -1,11 +1,8 @@
 package de.michiruf.scalor.capture.monitor;
 
 import com.jogamp.opengl.GL;
-import com.jogamp.opengl.GLContext;
-import com.jogamp.opengl.GLDrawableFactory;
-import com.jogamp.opengl.GLProfile;
 import de.michiruf.scalor.config.Configuration;
-import jogamp.opengl.awt.Java2D;
+import de.michiruf.scalor.helper.OpenGLContextHandler;
 
 import javax.inject.Inject;
 import java.awt.Rectangle;
@@ -18,13 +15,13 @@ import java.util.Observable;
  */
 public class OpenGLMonitor implements Monitor {
 
-    private final ContextHandler contextHandler;
+    private final OpenGLContextHandler contextHandler;
     private final Configuration configuration;
     private Rectangle dimens;
 
     @Inject
     public OpenGLMonitor(Configuration configuration) {
-        contextHandler = new ContextHandler();
+        contextHandler = new OpenGLContextHandler();
         this.configuration = configuration;
         configuration.addObserver(this);
         updateDimens();
@@ -44,7 +41,7 @@ public class OpenGLMonitor implements Monitor {
 
             ByteBuffer buffer = ByteBuffer.allocate(width * height * 3);
             // TODO glReadPixel currently only reads pixels within the application!
-            gl.glReadPixels(x, y, width, height, GL.GL_RGB, GL.GL_BYTE, buffer);
+            gl.glReadPixels(x, y, width, height, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, buffer);
             data[0] = buffer.array();
         });
         while (data[0] == null) {
@@ -61,37 +58,5 @@ public class OpenGLMonitor implements Monitor {
     private void updateDimens() {
         dimens = new Rectangle(configuration.getScanX(), configuration.getScanY(),
                 configuration.getScanWidth(), configuration.getScanHeight());
-    }
-
-    private static class ContextHandler {
-
-        private GLContext context;
-
-        public ContextHandler() {
-            this(GLProfile.getDefault());
-        }
-
-        public ContextHandler(GLProfile profile) {
-            Java2D.invokeWithOGLContextCurrent(null, () -> {
-                GLDrawableFactory factory = GLDrawableFactory.getFactory(profile);
-                context = factory.createExternalGLContext();
-            });
-        }
-
-        public GLContext getContext() {
-            return context;
-        }
-
-        public void makeCurrent() {
-            context.makeCurrent();
-        }
-
-        public void invoke(Runnable r) {
-            Java2D.invokeWithOGLContextCurrent(null, () -> {
-                // makeCurrent() could be outside of the invoke
-                makeCurrent();
-                r.run();
-            });
-        }
     }
 }

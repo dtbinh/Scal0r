@@ -14,7 +14,7 @@ public class App {
     public static void main(String args[]) {
         SwingUtilities.invokeLater(() -> {
             Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-            
+
             ObjectGraph appGraph = ObjectGraph.create(new AppModule());
             appGraph.injectStatics();
             appGraph.get(MainWindowPresenter.class).setVisible(true);
