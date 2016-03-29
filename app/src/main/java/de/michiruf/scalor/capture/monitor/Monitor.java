@@ -1,6 +1,5 @@
 package de.michiruf.scalor.capture.monitor;
 
-import java.awt.image.BufferedImage;
 import java.util.Observer;
 
 /**
@@ -9,7 +8,5 @@ import java.util.Observer;
  */
 public interface Monitor extends Observer {
 
-    BufferedImage captureScreenWithBufferedImage();
-
-    byte[] captureScreenWithByteArray();
+    Object captureScreen();
 }

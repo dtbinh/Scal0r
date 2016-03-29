@@ -20,8 +20,6 @@ import java.awt.image.BufferedImage;
 public class GraphicsDisplayFrame extends DisplayFrame {
 
     private BufferedImage currentFrameImage;
-    private boolean isFirstImage = true;
-    private boolean gotBufferedImage = false;
 
     @Inject
     public GraphicsDisplayFrame(Configuration configuration) {
@@ -36,26 +34,16 @@ public class GraphicsDisplayFrame extends DisplayFrame {
         updateBounds();
     }
 
-    @Override
-    public void draw(BufferedImage image) {
+    public void draw(Object image) {
         if (image == null) {
             return;
         }
-        gotBufferedImage = true;
-        currentFrameImage = image;
-        repaint();
-    }
 
-    @Override
-    public void draw(byte[] image) {
-        if (isFirstImage) {
-            isFirstImage = false;
-            return;
+        if (image instanceof BufferedImage) {
+            currentFrameImage = (BufferedImage) image;
+        } else if (image instanceof byte[]) {
+            currentFrameImage = ImageDataHelper.getBufferedImage(getWidth(), getHeight(), (byte[]) image);
         }
-        if (gotBufferedImage || image == null) {
-            return;
-        }
-        currentFrameImage = ImageDataHelper.getBufferedImage(getWidth(), getHeight(), image);
         repaint();
     }
 

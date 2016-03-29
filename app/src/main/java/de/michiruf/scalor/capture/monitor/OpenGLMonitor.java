@@ -1,12 +1,14 @@
 package de.michiruf.scalor.capture.monitor;
 
 import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GLContext;
+import com.jogamp.opengl.GLDrawableFactory;
 import com.jogamp.opengl.GLProfile;
 import de.michiruf.scalor.config.Configuration;
+import jogamp.opengl.awt.Java2D;
 
 import javax.inject.Inject;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.util.Observable;
 
@@ -16,43 +18,67 @@ import java.util.Observable;
  */
 public class OpenGLMonitor implements Monitor {
 
+    private ContextHandler contextHandler;
     private final Configuration configuration;
     private Rectangle dimens;
 
     @Inject
     public OpenGLMonitor(Configuration configuration) {
+        contextHandler = new ContextHandler();
         this.configuration = configuration;
         configuration.addObserver(this);
         updateDimens();
     }
 
     @Override
-    public BufferedImage captureScreenWithBufferedImage() {
-        // We do not need this kind here
-        return null;
+    public byte[] captureScreen() {
+        return captureScreenImpl();
+
+//
+//        if (!contextCreator.isContextAvailable()) {
+//            return null;
+//        }
+//
+//        contextCreator.makeCurrent();
+//        GL gl = contextCreator.getContext().getGL();
+//
+//        // TODO remove this
+//        contextCreator.getContext().setGL(new DebugGL4(contextCreator.getContext().getGL().getGL4()));
+//        gl = contextCreator.getContext().getGL();
+//        // -----
+//
+//        int x = (int) dimens.getX();
+//        int y = (int) dimens.getY();
+//        int width = (int) dimens.getWidth();
+//        int height = (int) dimens.getHeight();
+//
+//        ByteBuffer buffer = ByteBuffer.allocate(width * height * 3);
+//        gl.glReadPixels(x, y, width, height, GL.GL_RGB, GL.GL_BYTE, buffer);
+//        return buffer.array();
     }
 
-    @Override
-    public byte[] captureScreenWithByteArray() {
-        // TODO HERE I AM
-        GL gl = null;
-        try {
-            gl = (GL) GLProfile.getDefault().getGLCtor(false).newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (gl == null) {
-            return null;
-        }
+    @SuppressWarnings("StatementWithEmptyBody")
+    private byte[] captureScreenImpl() {
+        final byte[][] data = {null};
+        Java2D.invokeWithOGLContextCurrent(null, () -> {
+            GLDrawableFactory factory = GLDrawableFactory.getFactory(GLProfile.getDefault());
+            GLContext context = factory.createExternalGLContext();
+            context.makeCurrent();
+            GL gl = context.getGL();
 
-        int x = (int) dimens.getX();
-        int y = (int) dimens.getY();
-        int width = (int) dimens.getWidth();
-        int height = (int) dimens.getHeight();
+            int x = (int) dimens.getX();
+            int y = (int) dimens.getY();
+            int width = (int) dimens.getWidth();
+            int height = (int) dimens.getHeight();
 
-        ByteBuffer buffer = ByteBuffer.allocate(width * height * 3);
-        gl.glReadPixels(x, y, width, height, GL.GL_RGB, GL.GL_BYTE, buffer);
-        return buffer.array();
+            ByteBuffer buffer = ByteBuffer.allocate(width * height * 3);
+            gl.glReadPixels(x, y, width, height, GL.GL_RGB, GL.GL_BYTE, buffer);
+            data[0] = buffer.array();
+        });
+        while (data[0] == null) {
+            // Just wait for it
+        }
+        return data[0];
     }
 
     @Override
@@ -63,5 +89,33 @@ public class OpenGLMonitor implements Monitor {
     private void updateDimens() {
         dimens = new Rectangle(configuration.getScanX(), configuration.getScanY(),
                 configuration.getScanWidth(), configuration.getScanHeight());
+    }
+
+    private static class ContextHandler {
+
+        private GLContext context;
+
+        public ContextHandler() {
+            this(GLProfile.getDefault());
+        }
+
+        public ContextHandler(GLProfile profile) {
+            Java2D.invokeWithOGLContextCurrent(null, () -> {
+                GLDrawableFactory factory = GLDrawableFactory.getFactory(profile);
+                context = factory.createExternalGLContext();
+            });
+        }
+
+        public boolean isContextAvailable() {
+            return context != null;
+        }
+
+        public GLContext getContext() {
+            return context;
+        }
+
+        public void makeCurrent() {
+            context.makeCurrent();
+        }
     }
 }

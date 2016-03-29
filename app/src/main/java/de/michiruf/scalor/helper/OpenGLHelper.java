@@ -15,5 +15,6 @@ public class OpenGLHelper {
         // See:
         // http://www.coderanch.com/t/587914/java/java/JOGL-offscreenDrawable-PBuffers-save-png
 //        GLDrawableFactory.getFactory(GLProfile.getDefault()).canCreateGLPbuffer(GLProfile.getDefaultDevice());
+        // see GLDrawableFactory.getDefaultDevice
     }
 }

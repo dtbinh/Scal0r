@@ -25,8 +25,6 @@ import java.nio.ByteBuffer;
 public class OpenGLDisplayFrame extends DisplayFrame {
 
     private final MyGLCanvas canvas;
-    private boolean isFirstImage = true;
-    private boolean gotByteImage = false;
 
     @Inject
     public OpenGLDisplayFrame(Configuration configuration) {
@@ -46,24 +44,16 @@ public class OpenGLDisplayFrame extends DisplayFrame {
     }
 
     @Override
-    public void draw(BufferedImage image) {
-        if (isFirstImage) {
-            isFirstImage = false;
-            return;
-        }
-        if (gotByteImage || image == null) {
-            return;
-        }
-        canvas.draw(ImageDataHelper.getImageByteData(image));
-    }
-
-    @Override
-    public void draw(byte[] image) {
+    public void draw(Object image) {
         if (image == null) {
             return;
         }
-        gotByteImage = true;
-        canvas.draw(image);
+
+        if (image instanceof BufferedImage) {
+            canvas.draw(ImageDataHelper.getImageByteData((BufferedImage) image));
+        } else if (image instanceof byte[]) {
+            canvas.draw((byte[]) image);
+        }
     }
 
     private static class MyGLCanvas extends GLCanvas implements GLEventListener {
@@ -87,7 +77,7 @@ public class OpenGLDisplayFrame extends DisplayFrame {
         public void display(GLAutoDrawable drawable) {
             // TODO we could use OpenGL here to scale also: new GLU().gluScaleImage();
 
-            // remove this
+            // TODO remove this
             GL4 gl4 = drawable.getGL().getGL4();
             drawable.setGL(new DebugGL4(gl4));
             // -----

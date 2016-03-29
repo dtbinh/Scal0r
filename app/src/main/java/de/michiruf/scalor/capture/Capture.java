@@ -4,13 +4,10 @@ import de.michiruf.scalor.capture.display.Display;
 import de.michiruf.scalor.capture.monitor.Monitor;
 import de.michiruf.scalor.helper.FrameCounter;
 import de.michiruf.scalor.helper.HighPriorityDefaultThreadFactory;
-import de.michiruf.scalor.helper.ImageCompat;
 
 import javax.inject.Inject;
-import java.awt.Image;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -66,7 +63,6 @@ public class Capture {
 
     private void capture() {
         frameCounter.tick();
-        display.draw(monitor.captureScreenWithBufferedImage());
-        display.draw(monitor.captureScreenWithByteArray());
+        display.draw(monitor.captureScreen());
     }
 }

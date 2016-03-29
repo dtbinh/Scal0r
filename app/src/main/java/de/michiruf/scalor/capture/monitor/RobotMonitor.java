@@ -29,14 +29,8 @@ public class RobotMonitor implements Monitor {
     }
 
     @Override
-    public BufferedImage captureScreenWithBufferedImage() {
+    public BufferedImage captureScreen() {
         return robot.createScreenCapture(dimens);
-    }
-
-    @Override
-    public byte[] captureScreenWithByteArray() {
-        // We do not need this kind here
-        return null;
     }
 
     @Override

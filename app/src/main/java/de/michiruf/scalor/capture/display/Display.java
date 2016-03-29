@@ -10,9 +10,7 @@ import java.util.Observer;
  */
 public interface Display extends Observer {
 
-    void draw(BufferedImage image);
-    
-    void draw(byte[] image);
+    void draw(Object image);
 
     void setVisible(boolean visible);
 
