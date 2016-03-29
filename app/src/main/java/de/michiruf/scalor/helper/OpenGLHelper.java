@@ -1,6 +1,7 @@
 package de.michiruf.scalor.helper;
 
 import com.jogamp.opengl.GLDrawableFactory;
+import com.jogamp.opengl.GLException;
 import com.jogamp.opengl.GLProfile;
 
 /**
@@ -11,7 +12,11 @@ public class OpenGLHelper {
 
     // TODO Is this good?
     public static boolean isOpenGLSupported() {
-        GLDrawableFactory factory = GLDrawableFactory.getFactory(GLProfile.getDefault());
-        return factory.canCreateGLPbuffer(factory.getDefaultDevice(), GLProfile.getDefault());
+        try {
+            GLDrawableFactory factory = GLDrawableFactory.getFactory(GLProfile.getDefault());
+            return factory.canCreateGLPbuffer(factory.getDefaultDevice(), GLProfile.getDefault());
+        } catch (GLException e) {
+            return false;
+        }
     }
 }

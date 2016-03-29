@@ -28,6 +28,8 @@ public class OpenGLDisplayFrame extends DisplayFrame implements GLEventListener 
 
     private final GLCanvas canvas;
     private byte[] image;
+    private TextureData textureData;
+    private Texture texture;
 
     @Inject
     public OpenGLDisplayFrame(Configuration configuration) {
@@ -76,20 +78,31 @@ public class OpenGLDisplayFrame extends DisplayFrame implements GLEventListener 
         drawable.getContext().makeCurrent();
         GL gl = drawable.getGL();
 
-        TextureData textureData = new TextureData(
-                drawable.getGLProfile(),
-                GL.GL_RGB,
-                getWidth(),
-                getHeight(),
-                0,
-                new GLPixelBuffer.GLPixelAttributes(GL.GL_RGB, GL.GL_UNSIGNED_BYTE),
-                false,
-                false,
-                false,
-                ByteBuffer.wrap(image),
-                null
-        );
-        new Texture(gl, textureData);
+        if (texture == null || textureData == null) {
+            textureData = new TextureData(
+                    gl.getGLProfile(),
+                    GL.GL_RGB,
+                    getWidth(),
+                    getHeight(),
+                    0,
+                    new GLPixelBuffer.GLPixelAttributes(GL.GL_RGB, GL.GL_UNSIGNED_BYTE),
+                    false,
+                    false,
+                    false,
+                    ByteBuffer.wrap(image),
+                    null
+            );
+
+            texture = new Texture(gl, textureData);
+            texture.setTexParameterf(gl, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
+            texture.setTexParameterf(gl, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
+            texture.setTexParameterf(gl, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+            texture.setTexParameterf(gl, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+            return;
+        }
+
+        textureData.setBuffer(ByteBuffer.wrap(image));
+        texture.updateImage(gl, textureData);
     }
 
     @Override
